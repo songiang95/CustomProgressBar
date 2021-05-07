@@ -103,7 +103,7 @@ class DownloadProgressView @JvmOverloads constructor(
                 ContextCompat.getColor(context, R.color.progress_bg_color)
             )
             maxProgress = attribute.getInt(R.styleable.DownloadProgressView_max_progress, 100)
-            progress = attribute.getInt(R.styleable.DownloadProgressView_progress, 0)
+            progress = attribute.getInt(R.styleable.DownloadProgressView_download_progress, 0)
         } finally {
             attribute.recycle()
         }
@@ -127,10 +127,14 @@ class DownloadProgressView @JvmOverloads constructor(
 
     private fun calcProgressIndeterminate(value: Float) {
         val indeterminateProgressWidth = bgRectF.width() / 3
+        var right = value + indeterminateProgressWidth
+        if (right >= bgRectF.right) {
+            right = bgRectF.right
+        }
         clipRect.set(
             value,
             bgRectF.top,
-            value + indeterminateProgressWidth,
+            right,
             bgRectF.bottom
         )
         clipPath.reset()
