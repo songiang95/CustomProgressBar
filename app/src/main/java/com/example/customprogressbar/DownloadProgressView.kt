@@ -32,6 +32,7 @@ class DownloadProgressView @JvmOverloads constructor(
     private val clipRect = RectF()
     private val clipPath = Path()
     private val listStripePath = mutableListOf<Path>()
+    private val clipPathBg = Path()
 
     init {
         attrs?.let {
@@ -153,7 +154,17 @@ class DownloadProgressView @JvmOverloads constructor(
 
     private fun setBackgroundRect(width: Int, height: Int) {
         bgRectF.set(0f, 0f, width.toFloat(), height.toFloat())
+        setClipPathBackground()
         setListStripesPath()
+    }
+
+    private fun setClipPathBackground() {
+        clipPathBg.addRoundRect(
+            bgRectF,
+            bgRectF.height() / 2,
+            bgRectF.height() / 2,
+            Path.Direction.CW
+        )
     }
 
     private fun setListStripesPath() {
@@ -258,6 +269,7 @@ class DownloadProgressView @JvmOverloads constructor(
     }
 
     private fun drawStripes(canvas: Canvas?) {
+        canvas?.clipPath(clipPathBg)
         listStripePath.forEach {
             canvas?.drawPath(it, stripePaint)
         }
